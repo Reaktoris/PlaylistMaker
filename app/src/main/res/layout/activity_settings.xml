@@ -6,122 +6,51 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/upper_bar_height"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/primary_padding"
-        android:paddingTop="@dimen/secondary_padding"
-        android:layout_marginBottom="@dimen/secondary_margin">
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_marginBottom="@dimen/secondary_margin"
+        app:navigationIcon="@drawable/back_icon"
+        app:title="@string/settings"
+        app:titleTextColor="@color/black" />
 
-        <ImageView
-            android:layout_width="@dimen/icon_dimen"
-            android:layout_height="@dimen/icon_dimen"
-            android:id="@+id/back_button"
-            android:layout_marginTop="2dp"
-            android:src="@drawable/back_icon"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/secondary_margin"
-            android:text="@string/settings"
-            android:textSize="@dimen/primary_text_size"
-            android:textColor="@color/black"/>
-
-    </LinearLayout>
-
-    <FrameLayout
+    <Switch
         android:layout_width="match_parent"
         android:layout_height="@dimen/frame_height"
-        android:paddingHorizontal="@dimen/primary_padding">
+        android:paddingHorizontal="@dimen/primary_padding"
+        android:text="@string/dark_theme"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/third_margin"
-            android:layout_gravity="start"
-            android:text="@string/dark_theme"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <Switch
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="6.5dp"
-            android:layout_gravity="end"/>
-
-
-    </FrameLayout>
-
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/frame_height"
-        android:paddingHorizontal="@dimen/primary_padding">
+        android:paddingHorizontal="@dimen/primary_padding"
+        android:gravity="fill"
+        android:text="@string/share"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"
+        android:drawableEnd="@drawable/share_icon"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/third_margin"
-            android:layout_gravity="start"
-            android:text="@string/share"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="@dimen/icon_dimen"
-            android:layout_height="@dimen/icon_dimen"
-            android:layout_marginTop="@dimen/fourth_margin"
-            android:layout_gravity="end"
-            android:src="@drawable/share_icon"/>
-
-    </FrameLayout>
-
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/frame_height"
-        android:paddingHorizontal="@dimen/primary_padding">
+        android:paddingHorizontal="@dimen/primary_padding"
+        android:gravity="fill"
+        android:text="@string/support"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"
+        android:drawableEnd="@drawable/support"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/third_margin"
-            android:layout_gravity="start"
-            android:text="@string/support"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="@dimen/icon_dimen"
-            android:layout_height="@dimen/icon_dimen"
-            android:layout_marginTop="@dimen/fourth_margin"
-            android:layout_gravity="end"
-            android:src="@drawable/support"/>
-
-    </FrameLayout>
-
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/frame_height"
-        android:paddingHorizontal="@dimen/primary_padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/third_margin"
-            android:layout_gravity="start"
-            android:text="@string/eula"
-            android:textSize="@dimen/secondary_text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="@dimen/icon_dimen"
-            android:layout_height="@dimen/icon_dimen"
-            android:layout_marginTop="@dimen/fourth_margin"
-            android:layout_gravity="end"
-            android:src="@drawable/eula_icon"/>
-
-    </FrameLayout>
-
+        android:paddingHorizontal="@dimen/primary_padding"
+        android:gravity="fill"
+        android:text="@string/eula"
+        android:textSize="@dimen/secondary_text_size"
+        android:textColor="@color/black"
+        android:drawableEnd="@drawable/eula_icon"/>
 
 </LinearLayout>
