@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="upper_bar_height">56dp</dimen>
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="secondary_text_size">16sp</dimen>
+    <dimen name="primary_corner_radius">16dp</dimen>
+    <dimen name="primary_margin">16dp</dimen>
+    <dimen name="secondary_margin">24dp</dimen>
+    <dimen name="third_margin">21dp</dimen>
+    <dimen name="fourth_margin">19dp</dimen>
+    <dimen name="primary_padding">16dp</dimen>
+    <dimen name="secondary_padding">14dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+    <dimen name="frame_height">61dp</dimen>
+    <dimen name="icon_dimen">24dp</dimen>
+
+</resources>

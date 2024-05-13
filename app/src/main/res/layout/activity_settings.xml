@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/upper_bar_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/primary_padding"
+        android:paddingTop="@dimen/secondary_padding"
+        android:layout_marginBottom="@dimen/secondary_margin">
+
+        <ImageView
+            android:layout_width="@dimen/icon_dimen"
+            android:layout_height="@dimen/icon_dimen"
+            android:id="@+id/back_button"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/back_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/secondary_margin"
+            android:text="@string/settings"
+            android:textSize="@dimen/primary_text_size"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/frame_height"
+        android:paddingHorizontal="@dimen/primary_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/third_margin"
+            android:layout_gravity="start"
+            android:text="@string/dark_theme"
+            android:textSize="@dimen/secondary_text_size"
+            android:textColor="@color/black"/>
+
+        <Switch
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="6.5dp"
+            android:layout_gravity="end"/>
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/frame_height"
+        android:paddingHorizontal="@dimen/primary_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/third_margin"
+            android:layout_gravity="start"
+            android:text="@string/share"
+            android:textSize="@dimen/secondary_text_size"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:layout_width="@dimen/icon_dimen"
+            android:layout_height="@dimen/icon_dimen"
+            android:layout_marginTop="@dimen/fourth_margin"
+            android:layout_gravity="end"
+            android:src="@drawable/share_icon"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/frame_height"
+        android:paddingHorizontal="@dimen/primary_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/third_margin"
+            android:layout_gravity="start"
+            android:text="@string/support"
+            android:textSize="@dimen/secondary_text_size"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:layout_width="@dimen/icon_dimen"
+            android:layout_height="@dimen/icon_dimen"
+            android:layout_marginTop="@dimen/fourth_margin"
+            android:layout_gravity="end"
+            android:src="@drawable/support"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/frame_height"
+        android:paddingHorizontal="@dimen/primary_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/third_margin"
+            android:layout_gravity="start"
+            android:text="@string/eula"
+            android:textSize="@dimen/secondary_text_size"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:layout_width="@dimen/icon_dimen"
+            android:layout_height="@dimen/icon_dimen"
+            android:layout_marginTop="@dimen/fourth_margin"
+            android:layout_gravity="end"
+            android:src="@drawable/eula_icon"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>
