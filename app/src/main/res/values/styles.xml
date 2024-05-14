@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainMenuButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="cornerRadius">@dimen/primary_corner_radius</item>
+        <item name="android:layout_marginTop">@dimen/primary_margin</item>
+        <item name="android:layout_marginHorizontal">@dimen/primary_margin</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:fontWeight">500</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/icon_padding</item>
+    </style>
+
+    <style name="SettingsTextview">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/frame_height</item>
+        <item name="android:paddingHorizontal">@dimen/primary_padding</item>
+        <item name="android:gravity">fill</item>
+        <item name="android:textSize">@dimen/secondary_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/top_bar_height</item>
+        <item name="android:layout_marginBottom">@dimen/secondary_margin</item>
+        <item name="navigationIcon">@drawable/back_icon</item>
+        <item name="titleTextAppearance">@style/TextAppearance</item>
+    </style>
+
+    <style name="TextAppearance">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+    </style>
+
+</resources>
