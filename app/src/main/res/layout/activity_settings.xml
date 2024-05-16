@@ -11,7 +11,8 @@
         style="@style/Toolbar"
         app:title="@string/settings"/>
 
-    <Switch
+    <Switch android:id="@+id/switch_id"
+        style="@style/SwitchTint"
         android:layout_width="match_parent"
         android:layout_height="@dimen/frame_height"
         android:paddingHorizontal="@dimen/primary_padding"

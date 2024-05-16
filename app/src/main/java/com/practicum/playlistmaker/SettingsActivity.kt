@@ -1,11 +1,14 @@
 package com.practicum.playlistmaker
 
 import android.content.Intent
+import android.content.res.Resources.Theme
 import android.net.MailTo
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 
 class SettingsActivity : AppCompatActivity() {
