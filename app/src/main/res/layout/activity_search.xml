@@ -1,54 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="?attr/colorPrimaryVariant">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Toolbar"
-        android:layout_marginBottom="8dp"
-        app:title="@string/search"/>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginHorizontal="@dimen/primary_margin">
-
-        <EditText
-            android:id="@+id/edit_text_id"
-            style="@style/SearchTint"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/search_frame"
-            android:drawableStart="@drawable/search_icon_2"
-            android:drawablePadding="@dimen/icon_padding"
-            android:fontFamily="@font/ys_display_regular"
-            android:hint="@string/search"
-            android:maxLines="1"
-            android:paddingHorizontal="12dp"
-            android:textColor="@color/black"
-            android:textColorHint="?attr/colorPrimary"
-            android:textFontWeight="400"
-            android:textSize="@dimen/secondary_text_size"
-            tools:ignore="TouchTargetSizeCheck"/>
-
-        <ImageView
-            android:id="@+id/close_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:src="@drawable/close_icon"
-            android:visibility="gone" />
-    </FrameLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/secondary_margin"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_marginBottom="8dp"
+            app:title="@string/search"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="@dimen/primary_margin">
+
+            <EditText
+                android:id="@+id/edit_text_id"
+                style="@style/SearchTint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/search_frame"
+                android:drawableStart="@drawable/search_icon_2"
+                android:drawablePadding="@dimen/icon_padding"
+                android:fontFamily="@font/ys_display_regular"
+                android:hint="@string/search"
+                android:maxLines="1"
+                android:paddingHorizontal="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="?attr/colorPrimary"
+                android:textFontWeight="400"
+                android:textSize="@dimen/secondary_text_size"
+                tools:ignore="TouchTargetSizeCheck"
+                android:imeOptions="actionDone"
+                android:singleLine="true"/>
+
+            <ImageView
+                android:id="@+id/close_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:src="@drawable/close_icon"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/secondary_margin"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/found_nothing_placeholder"
+        style="@style/SearchActivityPlaceholderLayout">
+
+        <ImageView
+            style="@style/SearchActivityPlaceholderImage"
+            android:src="@drawable/error1_icon"/>
+
+        <TextView
+            style="@style/SearchActivityPlaceholderText"
+            android:text="@string/found_nothing"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/internet_error_placeholder"
+        style="@style/SearchActivityPlaceholderLayout">
+
+        <ImageView
+            style="@style/SearchActivityPlaceholderImage"
+            android:src="@drawable/error2_icon"/>
+
+        <TextView
+            style="@style/SearchActivityPlaceholderText"
+            android:text="@string/internet_connection_error"
+            android:gravity="center_horizontal"/>
+        
+        <Button android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="6dp"
+            app:cornerRadius="54dp"
+            android:layout_marginTop="@dimen/secondary_margin"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="?attr/colorOnSecondary"
+            android:text="@string/refresh"
+            android:textSize="14sp"
+            android:fontFamily="@font/ys_display_medium"
+            android:textFontWeight="500"
+            android:textColor="?attr/colorPrimaryVariant"
+            >
+
+        </Button>
+
+
+    </LinearLayout>
+
+</FrameLayout>
