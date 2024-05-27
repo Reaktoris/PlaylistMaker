@@ -10,5 +10,6 @@
     <dimen name="secondary_padding">14dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="frame_height">61dp</dimen>
+    <dimen name="button_radius">54dp</dimen>
 
 </resources>

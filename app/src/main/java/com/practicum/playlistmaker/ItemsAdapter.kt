@@ -3,7 +3,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemsAdapter(private val items: List<Track>) : RecyclerView.Adapter<ItemsViewHolder> () {
+class ItemsAdapter : RecyclerView.Adapter<ItemsViewHolder> () {
+    var trackList: MutableList<Track> = mutableListOf()
+    lateinit var searchHistory: SearchHistory
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.items_view, parent, false)
@@ -11,10 +13,13 @@ class ItemsAdapter(private val items: List<Track>) : RecyclerView.Adapter<ItemsV
     }
 
     override fun onBindViewHolder(holder: ItemsViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(trackList[position])
+        holder.itemView.setOnClickListener {
+            searchHistory.saveTrack(trackList[position])
+        }
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return trackList.size
     }
 }

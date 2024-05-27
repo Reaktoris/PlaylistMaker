@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -32,12 +33,16 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesSearchService = retrofit.create(ITunesSearchApi::class.java)
 
+    private lateinit var listener: OnSharedPreferenceChangeListener
+    private lateinit var searchHistory: SearchHistory
     val trackList: MutableList<Track> = mutableListOf()
     private var savedText = SEARCH_TEXT_DEF
     private lateinit var searchText: String
-
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var searchHistoryRecycler: RecyclerView
     private lateinit var editText: EditText
-    private lateinit var itemsAdapter: ItemsAdapter
+    private lateinit var tracksAdapter: ItemsAdapter
+    private lateinit var searchHistoryAdapter: ItemsAdapter
     private lateinit var foundNothingPlaceholder: LinearLayout
     private lateinit var internetErrorPlaceholder: LinearLayout
 
@@ -45,10 +50,23 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        itemsAdapter = ItemsAdapter(trackList)
+        val sharedPreferences = getSharedPreferences(PREF, MODE_PRIVATE)
+
+        searchHistory = SearchHistory(sharedPreferences)
+
+        recyclerView = findViewById(R.id.recyclerView)
+        tracksAdapter = ItemsAdapter()
+        tracksAdapter.searchHistory = searchHistory
+        tracksAdapter.trackList = trackList
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = itemsAdapter
+        recyclerView.adapter = tracksAdapter
+
+        searchHistoryRecycler = findViewById(R.id.search_history_recycler)
+        searchHistoryAdapter = ItemsAdapter()
+        searchHistoryAdapter.searchHistory = searchHistory
+        searchHistoryAdapter.trackList = searchHistory.getTrackList()
+        searchHistoryRecycler.layoutManager = LinearLayoutManager(this)
+        searchHistoryRecycler.adapter = searchHistoryAdapter
 
         editText = findViewById(R.id.edit_text_id)
         val closeButton = findViewById<ImageView>(R.id.close_button)
@@ -56,6 +74,32 @@ class SearchActivity : AppCompatActivity() {
         foundNothingPlaceholder = findViewById(R.id.found_nothing_placeholder)
         internetErrorPlaceholder = findViewById(R.id.internet_error_placeholder)
         val refreshButton = findViewById<Button>(R.id.refresh_button)
+        val searchHistoryLayout = findViewById<LinearLayout>(R.id.search_history)
+        val clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
+
+
+
+        listener = OnSharedPreferenceChangeListener { _, key ->
+            if (key == SEARCHED_TRACKS_KEY) {
+                searchHistoryAdapter.trackList = searchHistory.getTrackList()
+                searchHistoryAdapter.notifyDataSetChanged()
+            }
+        }
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clearHistory()
+            searchHistoryAdapter.trackList = searchHistory.getTrackList()
+            searchHistoryAdapter.notifyDataSetChanged()
+            searchHistoryLayout.isVisible = false
+        }
+
+        editText.setOnFocusChangeListener { _, hasFocus ->
+            searchHistoryLayout.isVisible = (hasFocus
+                    && editText.text.isEmpty()
+                    && searchHistoryAdapter.trackList.isNotEmpty())
+        }
 
         toolbar.setNavigationOnClickListener { finish() }
 
@@ -78,16 +122,23 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
+
+
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 savedText = s.toString()
-                if (s.isNullOrEmpty()){
-                    closeButton.isVisible = false
-                } else {
-                    closeButton.isVisible = true
+                closeButton.isVisible = !s.isNullOrEmpty()
+                searchHistoryLayout.isVisible = (editText.hasFocus()
+                        && editText.text.isEmpty()
+                        && searchHistoryAdapter.trackList.isNotEmpty())
+                if (editText.text.isEmpty()) {
+                    foundNothingPlaceholder.isVisible = false
+                    internetErrorPlaceholder.isVisible = false
+                    trackList.clear()
+                    tracksAdapter.notifyDataSetChanged()
                 }
             }
             override fun afterTextChanged(s: Editable?) {
@@ -96,6 +147,8 @@ class SearchActivity : AppCompatActivity() {
         }
         editText.addTextChangedListener(simpleTextWatcher)
     }
+
+
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
@@ -123,23 +176,23 @@ class SearchActivity : AppCompatActivity() {
                         trackList.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             trackList.addAll(response.body()?.results!!)
-                            itemsAdapter.notifyDataSetChanged()
+                            tracksAdapter.notifyDataSetChanged()
                         }
                         if (trackList.isEmpty()) {
                             foundNothingPlaceholder.isVisible = true
-                            itemsAdapter.notifyDataSetChanged()
+                            tracksAdapter.notifyDataSetChanged()
                         }
                     } else {
                         internetErrorPlaceholder.isVisible = true
                         trackList.removeAll(trackList)
-                        itemsAdapter.notifyDataSetChanged()
+                        tracksAdapter.notifyDataSetChanged()
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                     internetErrorPlaceholder.isVisible = true
                     trackList.removeAll(trackList)
-                    itemsAdapter.notifyDataSetChanged()
+                    tracksAdapter.notifyDataSetChanged()
                 }
 
             })
