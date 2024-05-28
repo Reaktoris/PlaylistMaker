@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker
 
-import android.view.RoundedCorner
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView

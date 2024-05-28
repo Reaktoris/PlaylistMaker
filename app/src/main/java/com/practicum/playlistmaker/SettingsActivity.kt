@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker
 
 import android.content.Intent
-import android.content.res.Resources.Theme
-import android.net.MailTo
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,8 +18,16 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = findViewById<TextView>(R.id.share_button)
         val supportButton = findViewById<TextView>(R.id.support_button)
         val eulaButton = findViewById<TextView>(R.id.eula_button)
+        val nightModeSwitch = findViewById<Switch>(R.id.switch_id)
+
+        nightModeSwitch.isChecked = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
 
         toolbar.setNavigationOnClickListener { finish() }
+
+        nightModeSwitch.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
+
         shareButton.setOnClickListener {
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
