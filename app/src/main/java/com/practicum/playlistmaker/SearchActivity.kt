@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -58,6 +59,7 @@ class SearchActivity : AppCompatActivity() {
         tracksAdapter = ItemsAdapter()
         tracksAdapter.searchHistory = searchHistory
         tracksAdapter.trackList = trackList
+        tracksAdapter.context = this@SearchActivity
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = tracksAdapter
 
@@ -65,6 +67,7 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryAdapter = ItemsAdapter()
         searchHistoryAdapter.searchHistory = searchHistory
         searchHistoryAdapter.trackList = searchHistory.getTrackList()
+        searchHistoryAdapter.context = this@SearchActivity
         searchHistoryRecycler.layoutManager = LinearLayoutManager(this)
         searchHistoryRecycler.adapter = searchHistoryAdapter
 
@@ -76,7 +79,6 @@ class SearchActivity : AppCompatActivity() {
         val refreshButton = findViewById<Button>(R.id.refresh_button)
         val searchHistoryLayout = findViewById<LinearLayout>(R.id.search_history)
         val clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
-
 
 
         listener = OnSharedPreferenceChangeListener { _, key ->
@@ -147,8 +149,6 @@ class SearchActivity : AppCompatActivity() {
         }
         editText.addTextChangedListener(simpleTextWatcher)
     }
-
-
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"

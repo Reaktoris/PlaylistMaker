@@ -3,9 +3,11 @@
     <dimen name="top_bar_height">56dp</dimen>
     <dimen name="primary_text_size">22sp</dimen>
     <dimen name="secondary_text_size">16sp</dimen>
+    <dimen name="third_text_size">14sp</dimen>
     <dimen name="primary_corner_radius">16dp</dimen>
     <dimen name="primary_margin">16dp</dimen>
     <dimen name="secondary_margin">24dp</dimen>
+    <dimen name="third_margin">17dp</dimen>
     <dimen name="primary_padding">16dp</dimen>
     <dimen name="secondary_padding">14dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
