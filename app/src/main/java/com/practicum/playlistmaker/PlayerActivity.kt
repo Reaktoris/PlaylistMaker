@@ -2,9 +2,10 @@ package com.practicum.playlistmaker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -46,11 +47,11 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
             .centerCrop()
-            .transform(RoundedCorners(8))
+            .transform(RoundedCorners((8f * resources.displayMetrics.density).toInt()))
             .placeholder(R.drawable.album)
             .into(cover)
 
-        if (collectionName.text == "No Strings Attached") albumGroup.isVisible = false
+        albumGroup.isVisible = track.collectionName.isNotEmpty()
 
         toolbar.setNavigationOnClickListener { finish() }
     }

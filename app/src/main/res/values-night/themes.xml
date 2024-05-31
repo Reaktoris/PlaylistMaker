@@ -12,5 +12,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorSecondary</item>
+
     </style>
 </resources>

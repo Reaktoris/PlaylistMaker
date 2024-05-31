@@ -1,12 +1,12 @@
 package com.practicum.playlistmaker
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 
+const val TRACK = "track"
 class ItemsAdapter : RecyclerView.Adapter<ItemsViewHolder> () {
     var trackList: MutableList<Track> = mutableListOf()
     lateinit var searchHistory: SearchHistory
@@ -21,7 +21,7 @@ class ItemsAdapter : RecyclerView.Adapter<ItemsViewHolder> () {
         holder.bind(trackList[position])
         holder.itemView.setOnClickListener {
             val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("track", Gson().toJson(trackList[position]))
+            intent.putExtra(TRACK, Gson().toJson(trackList[position]))
             context.startActivity(intent)
             searchHistory.saveTrack(trackList[position])
         }

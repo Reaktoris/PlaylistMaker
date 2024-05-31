@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayerActivity">
+    tools:context=".PlayerActivity"
+    android:background="?attr/colorPrimaryVariant">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guidLine_1"
@@ -39,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="time1, year1, genre1, country1, album1"
-        app:barrierDirection="end" />
+        app:barrierDirection="end"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -76,7 +77,7 @@
         app:layout_constraintEnd_toStartOf="@id/right_guidLine_2"
         app:layout_constraintTop_toBottomOf="@id/song_title"
         android:layout_marginTop="12dp"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/third_text_size"/>
 
     <ImageView
         android:id="@+id/add_button"
@@ -118,7 +119,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"
         style="@style/TextAppearance"
-        android:textSize="14sp"
+        android:textSize="@dimen/third_text_size"
         android:text="00:00"/>
 
     <TextView
@@ -138,7 +139,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/country1"
         app:layout_constraintStart_toStartOf="@id/left_guidLine_1"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:text="@string/genre"
         />
@@ -149,7 +150,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/genre1"
         app:layout_constraintStart_toStartOf="@id/left_guidLine_1"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:text="@string/year"
         />
@@ -160,7 +161,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/year1"
         app:layout_constraintStart_toStartOf="@id/left_guidLine_1"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:text="@string/album"
         />
@@ -171,7 +172,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/album1"
         app:layout_constraintStart_toStartOf="@id/left_guidLine_1"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:text="@string/time"/>
 
@@ -195,7 +196,7 @@
         app:layout_constraintBottom_toTopOf="@id/country2"
         app:layout_constraintEnd_toStartOf="@id/right_guidLine_1"
         app:layout_constraintStart_toEndOf="@id/barrier"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:textAlignment="viewEnd"
         android:ellipsize="end"
@@ -208,7 +209,7 @@
         app:layout_constraintBottom_toTopOf="@id/genre2"
         app:layout_constraintEnd_toStartOf="@id/right_guidLine_1"
         app:layout_constraintStart_toEndOf="@id/barrier"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:textAlignment="viewEnd"
         android:ellipsize="end"
@@ -221,7 +222,7 @@
         app:layout_constraintBottom_toTopOf="@id/year2"
         app:layout_constraintEnd_toStartOf="@id/right_guidLine_1"
         app:layout_constraintStart_toEndOf="@id/barrier"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:textAlignment="viewEnd"
         android:ellipsize="end"
@@ -234,7 +235,7 @@
         app:layout_constraintBottom_toTopOf="@id/album2"
         app:layout_constraintEnd_toStartOf="@id/right_guidLine_1"
         app:layout_constraintStart_toEndOf="@id/barrier"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="@dimen/third_margin"
         style="@style/PlayerActivityTextView2"
         android:textAlignment="viewEnd"
         android:ellipsize="end"
