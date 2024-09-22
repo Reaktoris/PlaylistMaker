@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,12 +28,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val SEARCH_TEXT_DEF =""
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable{search()}
@@ -46,10 +42,10 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesSearchService = retrofit.create(ITunesSearchApi::class.java)
 
-    private lateinit var listener: OnSharedPreferenceChangeListener
-    private lateinit var searchHistory: SearchHistory
     val trackList: MutableList<Track> = mutableListOf()
+
     private var savedText = SEARCH_TEXT_DEF
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchHistoryRecycler: RecyclerView
     private lateinit var editText: EditText
@@ -65,23 +61,31 @@ class SearchActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences(PREF, MODE_PRIVATE)
 
-        searchHistory = SearchHistory(sharedPreferences)
+        val searchHistory = SearchHistory(sharedPreferences)
 
         recyclerView = findViewById(R.id.recyclerView)
-        tracksAdapter = ItemsAdapter()
-        tracksAdapter.searchHistory = searchHistory
+        tracksAdapter = ItemsAdapter{
+            if (clickDebounce()) {
+                val intent = Intent(this, PlayerActivity::class.java)
+                intent.putExtra(TRACK, Gson().toJson(it))
+                this@SearchActivity.startActivity(intent)
+                searchHistory.saveTrack(it)
+            }
+        }
         tracksAdapter.trackList = trackList
-        tracksAdapter.context = this@SearchActivity
-        tracksAdapter.searchActivity = this@SearchActivity
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = tracksAdapter
 
         searchHistoryRecycler = findViewById(R.id.search_history_recycler)
-        searchHistoryAdapter = ItemsAdapter()
-        searchHistoryAdapter.searchHistory = searchHistory
+        searchHistoryAdapter = ItemsAdapter{
+            if (clickDebounce()) {
+                val intent = Intent(this, PlayerActivity::class.java)
+                intent.putExtra(TRACK, Gson().toJson(it))
+                this@SearchActivity.startActivity(intent)
+                searchHistory.saveTrack(it)
+            }
+        }
         searchHistoryAdapter.trackList = searchHistory.getTrackList()
-        searchHistoryAdapter.context = this@SearchActivity
-        searchHistoryAdapter.searchActivity = this@SearchActivity
         searchHistoryRecycler.layoutManager = LinearLayoutManager(this)
         searchHistoryRecycler.adapter = searchHistoryAdapter
 
@@ -96,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
         val clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
 
 
-        listener = OnSharedPreferenceChangeListener { _, key ->
+        val listener = OnSharedPreferenceChangeListener { _, key ->
             if (key == SEARCHED_TRACKS_KEY) {
                 searchHistoryAdapter.trackList = searchHistory.getTrackList()
                 searchHistoryAdapter.notifyDataSetChanged()
@@ -165,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
         editText.addTextChangedListener(simpleTextWatcher)
     }
 
-    fun clickDebounce() : Boolean {
+    private fun clickDebounce() : Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -225,5 +229,12 @@ class SearchActivity : AppCompatActivity() {
 
             })
         }}
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val SEARCH_TEXT_DEF =""
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
 }

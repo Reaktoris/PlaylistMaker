@@ -18,13 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val PROGRESS_DELAY = 500L
-    }
+
     private lateinit var track: Track
     private lateinit var playButton: ImageButton
     private lateinit var progress: TextView
@@ -142,5 +136,13 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val PROGRESS_DELAY = 500L
     }
 }
