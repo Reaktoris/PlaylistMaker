@@ -10,6 +10,6 @@
     </style>
 
     <style name="PlayButton">
-        <item name="android:src">@drawable/play_icon_night</item>
+        <item name="android:backgroundTint">@color/white</item>
     </style>
 </resources>
