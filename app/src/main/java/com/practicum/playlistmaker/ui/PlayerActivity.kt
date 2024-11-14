@@ -1,6 +1,5 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui
 
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +12,9 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.domain.model.Track
 import kotlinx.coroutines.Runnable
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,9 +24,11 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
     private lateinit var playButton: ImageButton
     private lateinit var progress: TextView
-    private var mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
     private val handler = Handler(Looper.getMainLooper())
+
+    private val mediaPlayerManagerInteractor = Creator.provideMediaPlayerManagerInteractor()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
@@ -78,7 +82,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mediaPlayerManagerInteractor.release()
         playerState = STATE_DEFAULT
     }
 
@@ -94,28 +98,28 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playButton.setBackgroundResource(R.drawable.play_icon)
-            playerState = STATE_PREPARED
-            progress.text = "00:00"
-        }
+        mediaPlayerManagerInteractor.preparePlayer(
+            track.previewUrl,
+            {
+                playButton.isEnabled = true
+                playerState = STATE_PREPARED
+            },
+            {
+                playButton.setBackgroundResource(R.drawable.play_icon)
+                playerState = STATE_PREPARED
+                progress.text = "00:00"
+            })
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        mediaPlayerManagerInteractor.startPlayer()
         playButton.setBackgroundResource(R.drawable.pause_icon)
         playerState = STATE_PLAYING
         updateProgress()
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        mediaPlayerManagerInteractor.pausePlayer()
         playButton.setBackgroundResource(R.drawable.play_icon)
         playerState = STATE_PAUSED
     }
@@ -126,7 +130,7 @@ class PlayerActivity : AppCompatActivity() {
                 override fun run() {
                     when(playerState) {
                         STATE_PLAYING -> {
-                            progress.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                            progress.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayerManagerInteractor.getCurrentPosition())
                             handler.postDelayed(this, PROGRESS_DELAY)
                         }
                         STATE_PREPARED, STATE_PAUSED, STATE_DEFAULT -> {
