@@ -11,7 +11,7 @@
         style="@style/Toolbar"
         app:title="@string/settings"/>
 
-    <Switch android:id="@+id/switch_id"
+    <Switch android:id="@+id/night_mode_switch"
         style="@style/SwitchTint"
         android:layout_width="match_parent"
         android:layout_height="@dimen/frame_height"

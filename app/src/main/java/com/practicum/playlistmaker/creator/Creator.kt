@@ -1,61 +1,74 @@
 package com.practicum.playlistmaker.creator
 
 import android.app.Application
-import com.practicum.playlistmaker.data.manager.MediaPlayerManagerImpl
-import com.practicum.playlistmaker.data.repository.TracksRepositoryImpl
-import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
-import com.practicum.playlistmaker.data.repository.NetworkClient
-import com.practicum.playlistmaker.data.repository.SearchHistoryRepositoryImpl
-import com.practicum.playlistmaker.data.sharedPreferences.SearchHistory
-import com.practicum.playlistmaker.domain.interactor.mediaPlayer.MediaPlayerManagerInteractor
-import com.practicum.playlistmaker.domain.interactor.mediaPlayer.MediaPlayerManagerInteractorImpl
-import com.practicum.playlistmaker.domain.interactor.searchHistory.SearchHistoryInteractor
-import com.practicum.playlistmaker.domain.interactor.searchHistory.SearchHistoryInteractorImpl
-import com.practicum.playlistmaker.domain.interactor.track.TrackInteractor
-import com.practicum.playlistmaker.domain.interactor.track.TrackInteractorImpl
-import com.practicum.playlistmaker.domain.manager.MediaPlayerManager
-import com.practicum.playlistmaker.domain.repository.SearchHistoryRepository
-import com.practicum.playlistmaker.domain.repository.TracksRepository
+import com.practicum.playlistmaker.player.data.impl.MediaPlayerManagerImpl
+import com.practicum.playlistmaker.search.data.impl.TracksRepositoryImpl
+import com.practicum.playlistmaker.search.data.impl.RetrofitNetworkClient
+import com.practicum.playlistmaker.search.data.network.NetworkClient
+import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
+import com.practicum.playlistmaker.search.data.impl.SearchHistory
+import com.practicum.playlistmaker.player.domain.MediaPlayerManagerInteractor
+import com.practicum.playlistmaker.player.domain.impl.MediaPlayerManagerInteractorImpl
+import com.practicum.playlistmaker.search.domain.SearchHistoryInteractor
+import com.practicum.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
+import com.practicum.playlistmaker.search.domain.TrackInteractor
+import com.practicum.playlistmaker.search.domain.impl.TrackInteractorImpl
+import com.practicum.playlistmaker.player.data.MediaPlayerManager
+import com.practicum.playlistmaker.search.data.SearchHistoryRepository
+import com.practicum.playlistmaker.search.data.TracksRepository
+import com.practicum.playlistmaker.settings.data.SettingsRepository
+import com.practicum.playlistmaker.settings.data.impl.SettingsRepositoryImpl
+import com.practicum.playlistmaker.settings.domain.SettingsInteractor
+import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
+import com.practicum.playlistmaker.sharing.data.ExternalNavigator
+import com.practicum.playlistmaker.sharing.data.impl.ExternalNavigatorImpl
+import com.practicum.playlistmaker.sharing.domain.SharingInteractor
+import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
-    //MediaPlayerManagerInteractor
-    fun provideMediaPlayerManagerInteractor(): MediaPlayerManagerInteractor {
-        return MediaPlayerManagerInteractorImpl(provideMediaPlayerManager())
-    }
 
-    private fun provideMediaPlayerManager(): MediaPlayerManager {
-        return MediaPlayerManagerImpl()
-    }
-
-    //Application
     private lateinit var application: Application
-
     fun getApplication(appl: Application) {
         application = appl
     }
 
-    //SearchHistoryInteractor
+    fun provideSettingsInteractor(): SettingsInteractor {
+        return SettingsInteractorImpl(provideSettingsRepository())
+    }
+    private fun provideSettingsRepository(): SettingsRepository {
+        return SettingsRepositoryImpl(application)
+    }
+
+    fun provideSharingInteractor(): SharingInteractor {
+        return SharingInteractorImpl(provideExternalNavigator(), application)
+    }
+    private fun provideExternalNavigator(): ExternalNavigator {
+        return ExternalNavigatorImpl(application)
+    }
+
+    fun provideMediaPlayerManagerInteractor(): MediaPlayerManagerInteractor {
+        return MediaPlayerManagerInteractorImpl(provideMediaPlayerManager())
+    }
+    private fun provideMediaPlayerManager(): MediaPlayerManager {
+        return MediaPlayerManagerImpl()
+    }
+
     fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
         return SearchHistoryInteractorImpl(provideSearchHistoryRepository())
     }
-
     private fun provideSearchHistoryRepository(): SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(provideSearchHistory())
     }
-
     private fun provideSearchHistory(): SearchHistory {
         return SearchHistory(application)
     }
 
-    //TrackInteractor
     fun provideTrackInteractor(): TrackInteractor {
         return TrackInteractorImpl(provideTracksRepository())
     }
-
     private fun provideTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(provideRetrofitNetworkClient())
     }
-
     private fun provideRetrofitNetworkClient(): NetworkClient {
         return RetrofitNetworkClient()
     }
