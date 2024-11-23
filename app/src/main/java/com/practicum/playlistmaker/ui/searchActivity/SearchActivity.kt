@@ -1,14 +1,14 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.searchActivity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -21,11 +21,13 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator
+
+import com.practicum.playlistmaker.domain.interactor.track.TrackInteractor
+import com.practicum.playlistmaker.domain.model.ConsumerData
+import com.practicum.playlistmaker.domain.model.Track
+import com.practicum.playlistmaker.ui.PlayerActivity
 
 class SearchActivity : AppCompatActivity() {
 
@@ -33,24 +35,17 @@ class SearchActivity : AppCompatActivity() {
     private val searchRunnable = Runnable{search()}
     private var isClickAllowed = true
 
-    private val iTunesSearchBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesSearchBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesSearchService = retrofit.create(ITunesSearchApi::class.java)
-
-    val trackList: MutableList<Track> = mutableListOf()
+    private val trackInteractor = Creator.provideTrackInteractor()
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
 
     private var savedText = SEARCH_TEXT_DEF
+    private val trackList = mutableListOf<Track>()
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchHistoryRecycler: RecyclerView
     private lateinit var editText: EditText
-    private lateinit var tracksAdapter: ItemsAdapter
-    private lateinit var searchHistoryAdapter: ItemsAdapter
+    private lateinit var tracksAdapter: TracksAdapter
+    private lateinit var searchHistoryAdapter: TracksAdapter
     private lateinit var foundNothingPlaceholder: LinearLayout
     private lateinit var internetErrorPlaceholder: LinearLayout
     private lateinit var progressBar: ProgressBar
@@ -59,17 +54,15 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val sharedPreferences = getSharedPreferences(PREF, MODE_PRIVATE)
-
-        val searchHistory = SearchHistory(sharedPreferences)
-
         recyclerView = findViewById(R.id.recyclerView)
-        tracksAdapter = ItemsAdapter{
+        tracksAdapter = TracksAdapter{
             if (clickDebounce()) {
                 val intent = Intent(this, PlayerActivity::class.java)
                 intent.putExtra(TRACK, Gson().toJson(it))
                 this@SearchActivity.startActivity(intent)
-                searchHistory.saveTrack(it)
+                searchHistoryInteractor.saveTrack(it)
+                searchHistoryAdapter.trackList = searchHistoryInteractor.getTrackList()
+                searchHistoryAdapter.notifyDataSetChanged()
             }
         }
         tracksAdapter.trackList = trackList
@@ -77,15 +70,17 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.adapter = tracksAdapter
 
         searchHistoryRecycler = findViewById(R.id.search_history_recycler)
-        searchHistoryAdapter = ItemsAdapter{
+        searchHistoryAdapter = TracksAdapter{
             if (clickDebounce()) {
                 val intent = Intent(this, PlayerActivity::class.java)
                 intent.putExtra(TRACK, Gson().toJson(it))
                 this@SearchActivity.startActivity(intent)
-                searchHistory.saveTrack(it)
+                searchHistoryInteractor.saveTrack(it)
+                searchHistoryAdapter.trackList = searchHistoryInteractor.getTrackList()
+                searchHistoryAdapter.notifyDataSetChanged()
             }
         }
-        searchHistoryAdapter.trackList = searchHistory.getTrackList()
+        searchHistoryAdapter.trackList = searchHistoryInteractor.getTrackList()
         searchHistoryRecycler.layoutManager = LinearLayoutManager(this)
         searchHistoryRecycler.adapter = searchHistoryAdapter
 
@@ -100,18 +95,11 @@ class SearchActivity : AppCompatActivity() {
         val clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
 
 
-        val listener = OnSharedPreferenceChangeListener { _, key ->
-            if (key == SEARCHED_TRACKS_KEY) {
-                searchHistoryAdapter.trackList = searchHistory.getTrackList()
-                searchHistoryAdapter.notifyDataSetChanged()
-            }
-        }
 
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
 
         clearHistoryButton.setOnClickListener {
-            searchHistory.clearHistory()
-            searchHistoryAdapter.trackList = searchHistory.getTrackList()
+            searchHistoryInteractor.clearHistory()
+            searchHistoryAdapter.trackList = searchHistoryInteractor.getTrackList()
             searchHistoryAdapter.notifyDataSetChanged()
             searchHistoryLayout.isVisible = false
         }
@@ -131,13 +119,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
         refreshButton.setOnClickListener {
-            search()
+            progressBar.visibility = View.VISIBLE
+            searchDebounce()
         }
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 search()
-                true
             }
             false
         }
@@ -146,7 +134,6 @@ class SearchActivity : AppCompatActivity() {
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 savedText = s.toString()
@@ -163,7 +150,6 @@ class SearchActivity : AppCompatActivity() {
                 searchDebounce()
             }
             override fun afterTextChanged(s: Editable?) {
-                // empty
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
@@ -199,34 +185,30 @@ class SearchActivity : AppCompatActivity() {
             progressBar.isVisible = true
             foundNothingPlaceholder.isVisible = false
             internetErrorPlaceholder.isVisible = false
-            iTunesSearchService.search(savedText).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(call: Call<TrackResponse>,
-                                        response: Response<TrackResponse>) {
-                    progressBar.isVisible = false
-                    if (response.code() == 200) {
+            trackInteractor.searchTracks(savedText, object: TrackInteractor.TrackConsumer<List<Track>?> {
+                override fun consume(data: ConsumerData<List<Track>?>) {
+                    handler.post {
+                        progressBar.isVisible = false
                         trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
-                            tracksAdapter.notifyDataSetChanged()
+                        when(data) {
+                            is ConsumerData.Data -> {
+                                if (data.value!!.isNotEmpty()) {
+                                    trackList.addAll(data.value)
+                                    tracksAdapter.notifyDataSetChanged()
+                                }
+                                if (data.value.isEmpty()) {
+                                    foundNothingPlaceholder.isVisible = true
+                                    tracksAdapter.notifyDataSetChanged()
+                                }
+                            }
+                            is ConsumerData.Error -> {
+                                internetErrorPlaceholder.isVisible = true
+                                trackList.removeAll(trackList.toSet())
+                                tracksAdapter.notifyDataSetChanged()
+                            }
                         }
-                        if (trackList.isEmpty()) {
-                            foundNothingPlaceholder.isVisible = true
-                            tracksAdapter.notifyDataSetChanged()
-                        }
-                    } else {
-                        internetErrorPlaceholder.isVisible = true
-                        trackList.removeAll(trackList)
-                        tracksAdapter.notifyDataSetChanged()
                     }
                 }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                    internetErrorPlaceholder.isVisible = true
-                    trackList.removeAll(trackList)
-                    tracksAdapter.notifyDataSetChanged()
-                }
-
             })
         }}
 
