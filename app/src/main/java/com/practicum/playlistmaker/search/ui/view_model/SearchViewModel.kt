@@ -1,20 +1,20 @@
 package com.practicum.playlistmaker.search.ui.view_model
 
 import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.search.domain.SearchHistoryInteractor
 import com.practicum.playlistmaker.search.domain.TrackInteractor
 import com.practicum.playlistmaker.search.domain.model.ConsumerData
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.SearchState
 
-class SearchViewModel : ViewModel() {
-    private val trackInteractor = Creator.provideTrackInteractor()
-    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
-    private val handler = Handler(Looper.getMainLooper())
+class SearchViewModel(
+    private val trackInteractor: TrackInteractor,
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+    private val handler: Handler
+) : ViewModel() {
 
     private val searchStateLiveData = MutableLiveData<SearchState>()
 
