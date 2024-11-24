@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity"
+    tools:context=".main.ui.MainActivity"
     android:orientation="vertical"
     android:background="?attr/colorSecondary">
 
@@ -30,7 +30,8 @@
         style="@style/MainMenuButton"
         android:layout_marginTop="@dimen/secondary_margin"
         android:text="@string/search"
-        app:icon="@drawable/search_icon"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:icon="@drawable/search_icon" />
 
     <Button
         android:id="@+id/media_button"
