@@ -1,33 +1,33 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.player.data.MediaPlayerManager
+import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.MediaPlayerManagerInteractor
 
-class MediaPlayerManagerInteractorImpl(private val mediaPlayerManager: MediaPlayerManager) :
+class MediaPlayerManagerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRepository) :
     MediaPlayerManagerInteractor {
 
     override fun preparePlayer(url: String) {
-        mediaPlayerManager.preparePlayer(url)
+        mediaPlayerRepository.preparePlayer(url)
     }
 
     override fun startPlayer() {
-        mediaPlayerManager.startPlayer()
+        mediaPlayerRepository.startPlayer()
     }
 
     override fun pausePlayer() {
-        mediaPlayerManager.pausePlayer()
+        mediaPlayerRepository.pausePlayer()
     }
 
     override fun getCurrentPosition(): Int {
-        return mediaPlayerManager.getCurrentPosition()
+        return mediaPlayerRepository.getCurrentPosition()
     }
 
     override fun release() {
-        mediaPlayerManager.release()
+        mediaPlayerRepository.release()
     }
 
     override fun setOnCompletionListener(onCompletion: () -> Unit) {
-        mediaPlayerManager.setOnCompletionListener {
+        mediaPlayerRepository.setOnCompletionListener {
             onCompletion()
         }
     }

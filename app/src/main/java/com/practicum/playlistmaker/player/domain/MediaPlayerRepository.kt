@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker.player.data
+package com.practicum.playlistmaker.player.domain
 
-interface MediaPlayerManager {
+interface MediaPlayerRepository {
     fun preparePlayer(url: String)
 
     fun startPlayer()

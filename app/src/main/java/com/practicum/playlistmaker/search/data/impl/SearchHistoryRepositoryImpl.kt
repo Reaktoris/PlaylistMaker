@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.search.data.impl
 
 import com.practicum.playlistmaker.search.data.dto.TrackDto
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.search.data.SearchHistoryRepository
+import com.practicum.playlistmaker.search.domain.SearchHistoryRepository
 
 class SearchHistoryRepositoryImpl(private val searchHistory: SearchHistory) :
     SearchHistoryRepository {

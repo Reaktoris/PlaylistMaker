@@ -1,14 +1,11 @@
 package com.practicum.playlistmaker.sharing.domain.impl
 
-import android.content.Context
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.sharing.data.ExternalNavigator
+import com.practicum.playlistmaker.sharing.domain.ExternalNavigator
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
 
 class SharingInteractorImpl(
-    private val externalNavigator: ExternalNavigator,
-    private val context: Context
+    private val externalNavigator: ExternalNavigator
 ) : SharingInteractor {
     override fun shareApp() {
         externalNavigator.shareLink(getShareAppLink())
@@ -23,18 +20,25 @@ class SharingInteractorImpl(
     }
 
     private fun getShareAppLink(): String {
-        return context.getString(R.string.practicum_url)
+        return LINK_SHARE
     }
 
     private fun getTermsLink(): String {
-        return context.getString(R.string.eula_url)
+        return LINK_TERMS
     }
 
     private fun getSupportEmailData(): EmailData {
         return EmailData(
-            email = context.getString(R.string.support_email),
-            subject = context.getString(R.string.email_subject),
-            text = context.getString(R.string.email_body)
+            email = EMAIL,
+            subject = SUBJECT,
+            text = TEXT
         )
+    }
+    companion object {
+        private const val LINK_SHARE = "https://practicum.yandex.ru/android-developer/"
+        private const val LINK_TERMS = "https://yandex.ru/legal/practicum_offer/"
+        private const val EMAIL = "scotty200305@gmail.com"
+        private const val SUBJECT = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+        private const val TEXT = "Спасибо разработчикам и разработчицам за крутое приложение!"
     }
 }

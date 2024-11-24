@@ -30,6 +30,8 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var searchRunnable: Runnable
 
+    private lateinit var gson: Gson
+
     private var isClickAllowed = true
     private var savedText = SEARCH_TEXT_DEF
     private val trackList = mutableListOf<Track>()
@@ -47,6 +49,8 @@ class SearchActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         searchRunnable = Runnable{viewModel.searchTracks(savedText)}
+
+        gson = Gson()
 
         tracksAdapter = TracksAdapter{clickHandler(it)}
         tracksAdapter.trackList = trackList
@@ -159,7 +163,7 @@ class SearchActivity : AppCompatActivity() {
     private fun clickHandler(track: Track) {
         if (clickDebounce()) {
             val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra(TRACK, Gson().toJson(track))
+            intent.putExtra(TRACK, gson.toJson(track))
             this@SearchActivity.startActivity(intent)
             viewModel.saveTrack(track)
             searchHistoryAdapter.trackList = viewModel.getTrackList()

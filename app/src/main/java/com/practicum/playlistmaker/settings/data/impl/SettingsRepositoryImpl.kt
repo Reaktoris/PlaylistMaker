@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.app.NIGHT_MODE_KEY
 import com.practicum.playlistmaker.app.PREFERENCES
-import com.practicum.playlistmaker.settings.data.SettingsRepository
+import com.practicum.playlistmaker.settings.domain.SettingsRepository
 
 class SettingsRepositoryImpl(context: Context) : SettingsRepository {
     private val sharedPref = context.getSharedPreferences(PREFERENCES, Application.MODE_PRIVATE)

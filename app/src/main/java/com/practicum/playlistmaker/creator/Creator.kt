@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.creator
 
 import android.app.Application
-import com.practicum.playlistmaker.player.data.impl.MediaPlayerManagerImpl
+import com.practicum.playlistmaker.player.data.impl.MediaPlayerRepositoryImpl
 import com.practicum.playlistmaker.search.data.impl.TracksRepositoryImpl
 import com.practicum.playlistmaker.search.data.impl.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.NetworkClient
@@ -13,14 +13,14 @@ import com.practicum.playlistmaker.search.domain.SearchHistoryInteractor
 import com.practicum.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.practicum.playlistmaker.search.domain.TrackInteractor
 import com.practicum.playlistmaker.search.domain.impl.TrackInteractorImpl
-import com.practicum.playlistmaker.player.data.MediaPlayerManager
-import com.practicum.playlistmaker.search.data.SearchHistoryRepository
-import com.practicum.playlistmaker.search.data.TracksRepository
-import com.practicum.playlistmaker.settings.data.SettingsRepository
+import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
+import com.practicum.playlistmaker.search.domain.SearchHistoryRepository
+import com.practicum.playlistmaker.search.domain.TracksRepository
+import com.practicum.playlistmaker.settings.domain.SettingsRepository
 import com.practicum.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
-import com.practicum.playlistmaker.sharing.data.ExternalNavigator
+import com.practicum.playlistmaker.sharing.domain.ExternalNavigator
 import com.practicum.playlistmaker.sharing.data.impl.ExternalNavigatorImpl
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
@@ -28,7 +28,7 @@ import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 object Creator {
 
     private lateinit var application: Application
-    fun getApplication(appl: Application) {
+    fun setApplication(appl: Application) {
         application = appl
     }
 
@@ -40,7 +40,7 @@ object Creator {
     }
 
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(provideExternalNavigator(), application)
+        return SharingInteractorImpl(provideExternalNavigator())
     }
     private fun provideExternalNavigator(): ExternalNavigator {
         return ExternalNavigatorImpl(application)
@@ -49,8 +49,8 @@ object Creator {
     fun provideMediaPlayerManagerInteractor(): MediaPlayerManagerInteractor {
         return MediaPlayerManagerInteractorImpl(provideMediaPlayerManager())
     }
-    private fun provideMediaPlayerManager(): MediaPlayerManager {
-        return MediaPlayerManagerImpl()
+    private fun provideMediaPlayerManager(): MediaPlayerRepository {
+        return MediaPlayerRepositoryImpl()
     }
 
     fun provideSearchHistoryInteractor(): SearchHistoryInteractor {

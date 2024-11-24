@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.search.domain.impl
 
 import com.practicum.playlistmaker.search.domain.model.ConsumerData
 import com.practicum.playlistmaker.search.domain.model.Track
-import com.practicum.playlistmaker.search.data.TracksRepository
+import com.practicum.playlistmaker.search.domain.TracksRepository
 import com.practicum.playlistmaker.search.domain.TrackInteractor
 import java.util.concurrent.Executors
 
