@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryVariant"
+    tools:context=".media.ui.fragment.FavoritesFragment">
+
+    <LinearLayout
+        style="@style/SearchActivityPlaceholderLayout"
+        android:layout_marginTop="106dp"
+        android:visibility="visible">
+
+        <ImageView
+            style="@style/SearchActivityPlaceholderImage"
+            android:src="@drawable/error1_icon"/>
+
+        <TextView
+            style="@style/SearchActivityPlaceholderText"
+            android:text="@string/empty_collection"/>
+
+    </LinearLayout>
+
+</FrameLayout>

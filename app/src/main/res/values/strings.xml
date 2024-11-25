@@ -14,7 +14,10 @@
     <string name="eula_url">https://yandex.ru/legal/practicum_offer/</string>
     <string name="found_nothing">Ничего не нашлось</string>
     <string name="internet_connection_error">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="empty_collection">Ваша медиатека пуста</string>
+    <string name="empty_playlists">Вы не создали\nни одного плейлиста</string>
     <string name="refresh">Обновить</string>
+    <string name="create_playlist">Новый плейлист</string>
     <string name="search_history">Вы искали</string>
     <string name="clear_search_history">Очистить историю</string>
     <string name="country">Страна</string>
@@ -22,4 +25,6 @@
     <string name="year">Год</string>
     <string name="album">Альбом</string>
     <string name="time">Длительность</string>
+    <string name="favorites">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
 </resources>

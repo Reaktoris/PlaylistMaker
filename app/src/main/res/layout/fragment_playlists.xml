@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorPrimaryVariant"
+    tools:context=".media.ui.fragment.PlaylistsFragment">
+
+    <Button android:id="@+id/new_playlist_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        app:cornerRadius="@dimen/button_radius"
+        android:layout_marginTop="@dimen/secondary_margin"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="?attr/colorOnSecondary"
+        android:text="@string/create_playlist"
+        android:textSize="14sp"
+        android:fontFamily="@font/ys_display_medium"
+        android:textFontWeight="500"
+        android:textColor="?attr/colorPrimaryVariant"
+        />
+
+    <LinearLayout
+        style="@style/SearchActivityPlaceholderLayout"
+        android:layout_marginTop="106dp"
+        android:visibility="visible">
+
+        <ImageView
+            style="@style/SearchActivityPlaceholderImage"
+            android:src="@drawable/error1_icon"/>
+
+        <TextView
+            style="@style/SearchActivityPlaceholderText"
+            android:textAlignment="center"
+            android:text="@string/empty_playlists"/>
+
+    </LinearLayout>
+
+</FrameLayout>
