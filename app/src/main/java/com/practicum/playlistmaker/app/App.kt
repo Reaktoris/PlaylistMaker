@@ -3,7 +3,12 @@ package com.practicum.playlistmaker.app
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.di.dataModule
+import com.practicum.playlistmaker.di.interactorModule
+import com.practicum.playlistmaker.di.repositoryModule
+import com.practicum.playlistmaker.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 const val PREFERENCES = "playlist_maker_preferences"
 const val NIGHT_MODE_KEY = "night_mode_key"
@@ -16,7 +21,10 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Creator.setApplication(this)
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
 
         sharedPref = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
         darkTheme = sharedPref.getBoolean(

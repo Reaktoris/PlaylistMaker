@@ -1,18 +1,18 @@
 package com.practicum.playlistmaker.player.ui.view_model
 
 import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.player.domain.MediaPlayerManagerInteractor
 import com.practicum.playlistmaker.player.ui.PlayerState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel : ViewModel() {
-    private val mediaPlayerManagerInteractor = Creator.provideMediaPlayerManagerInteractor()
-    private val handler = Handler(Looper.getMainLooper())
+class PlayerViewModel(
+    private val mediaPlayerManagerInteractor: MediaPlayerManagerInteractor,
+    private val handler: Handler
+    ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
 
