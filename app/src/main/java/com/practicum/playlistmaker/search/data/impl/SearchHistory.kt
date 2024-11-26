@@ -9,7 +9,7 @@ class SearchHistory(private val gson: Gson, private val sharedPreferences: Share
     private val searchHistoryList = mutableListOf<TrackDto>()
     fun saveTrack(trackDto: TrackDto) {
         if (searchHistoryList.contains(trackDto)) searchHistoryList.remove(trackDto)
-        if (searchHistoryList.size == 10) searchHistoryList.removeLast()
+        if (searchHistoryList.size == SEARCH_HISTORY_LIST_MAX_SIZE) searchHistoryList.removeLast()
         searchHistoryList.add(0, trackDto)
         sharedPreferences.edit().putString(SEARCHED_TRACKS_KEY, gson.toJson(searchHistoryList)).apply()
     }
@@ -26,5 +26,9 @@ class SearchHistory(private val gson: Gson, private val sharedPreferences: Share
     fun clearHistory() {
         searchHistoryList.clear()
         sharedPreferences.edit().clear().apply()
+    }
+
+    companion object {
+        private const val SEARCH_HISTORY_LIST_MAX_SIZE = 10
     }
 }

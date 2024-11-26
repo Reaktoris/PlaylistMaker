@@ -10,6 +10,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.model.Track
+import com.practicum.playlistmaker.search.ui.activity.TRACK
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -31,7 +32,7 @@ class PlayerActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            track = Gson().fromJson(extras.getString("track"), Track::class.java)
+            track = Gson().fromJson(extras.getString(TRACK), Track::class.java)
         }
 
         binding.songTitle.text = track.trackName
