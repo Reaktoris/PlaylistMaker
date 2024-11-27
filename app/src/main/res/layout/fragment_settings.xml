@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorPrimaryVariant">
+    android:background="?attr/colorPrimaryVariant"
+    tools:context=".settings.ui.fragment.SettingsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -25,18 +27,18 @@
         android:id="@+id/share_button"
         style="@style/SettingsTextview"
         android:text="@string/share"
-        android:drawableEnd="@drawable/share_icon"/>
+        app:drawableEndCompat="@drawable/share_icon" />
 
     <TextView
         android:id="@+id/support_button"
         style="@style/SettingsTextview"
         android:text="@string/support"
-        android:drawableEnd="@drawable/support"/>
+        app:drawableEndCompat="@drawable/support" />
 
     <TextView
         android:id="@+id/eula_button"
         style="@style/SettingsTextview"
         android:text="@string/eula"
-        android:drawableEnd="@drawable/eula_icon"/>
+        app:drawableEndCompat="@drawable/eula_icon" />
 
 </LinearLayout>
