@@ -45,6 +45,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/Toolbar"
+        app:navigationIcon="@drawable/back_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -121,8 +122,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"
         style="@style/TextAppearance"
-        android:textSize="@dimen/third_text_size"
-        android:text="00:00"/>
+        android:textSize="@dimen/third_text_size" />
 
     <TextView
         android:id="@+id/country1"

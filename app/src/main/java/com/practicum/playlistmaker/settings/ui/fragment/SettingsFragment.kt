@@ -24,7 +24,9 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.nightModeSwitch.isChecked = viewModel.getThemeSettings()
+        viewModel.getThemeLiveData().observe(viewLifecycleOwner) {theme ->
+            binding.nightModeSwitch.isChecked = theme
+        }
 
         binding.nightModeSwitch.setOnCheckedChangeListener { _, checked ->
             viewModel.updateThemeSettings(checked)

@@ -32,8 +32,8 @@ class SearchFragment : Fragment() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var searchRunnable: Runnable
     private lateinit var gson: Gson
-    private lateinit var tracksAdapter: TracksAdapter
-    private lateinit var searchHistoryAdapter: TracksAdapter
+    private val tracksAdapter: TracksAdapter by lazy {TracksAdapter{clickHandler(it)}}
+    private val searchHistoryAdapter: TracksAdapter by lazy {TracksAdapter{clickHandler(it)}}
 
     private var isClickAllowed = true
     private var savedText = SEARCH_TEXT_DEF
@@ -54,12 +54,10 @@ class SearchFragment : Fragment() {
 
         gson = Gson()
 
-        tracksAdapter = TracksAdapter{clickHandler(it)}
         tracksAdapter.trackList = trackList
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = tracksAdapter
 
-        searchHistoryAdapter = TracksAdapter{clickHandler(it)}
         searchHistoryAdapter.trackList = viewModel.getTrackList()
         binding.searchHistoryRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.searchHistoryRecycler.adapter = searchHistoryAdapter
@@ -185,11 +183,6 @@ class SearchFragment : Fragment() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
-
-    /*override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SearchActivity.SEARCH_TEXT, savedText)
-    }*/
 
     companion object {
         const val SEARCH_TEXT_DEF =""
