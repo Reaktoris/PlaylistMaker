@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.search.ui.activity
+package com.practicum.playlistmaker.search.ui.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -7,60 +7,60 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.domain.model.Track
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.ui.PlayerActivity
+import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.SearchState
+import com.practicum.playlistmaker.search.ui.TRACK
+import com.practicum.playlistmaker.search.ui.TracksAdapter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private lateinit var binding: ActivitySearchBinding
-
+    private lateinit var binding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
-
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var searchRunnable: Runnable
-
     private lateinit var gson: Gson
+    private val tracksAdapter: TracksAdapter by lazy {TracksAdapter{clickHandler(it)}}
+    private val searchHistoryAdapter: TracksAdapter by lazy {TracksAdapter{clickHandler(it)}}
 
     private var isClickAllowed = true
     private var savedText = SEARCH_TEXT_DEF
     private val trackList = mutableListOf<Track>()
 
-    private lateinit var tracksAdapter: TracksAdapter
-    private lateinit var searchHistoryAdapter: TracksAdapter
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         searchRunnable = Runnable{viewModel.searchTracks(savedText)}
 
         gson = Gson()
 
-        tracksAdapter = TracksAdapter{clickHandler(it)}
         tracksAdapter.trackList = trackList
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = tracksAdapter
 
-        searchHistoryAdapter = TracksAdapter{clickHandler(it)}
         searchHistoryAdapter.trackList = viewModel.getTrackList()
-        binding.searchHistoryRecycler.layoutManager = LinearLayoutManager(this)
+        binding.searchHistoryRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.searchHistoryRecycler.adapter = searchHistoryAdapter
-
-        binding.toolbar.setNavigationOnClickListener { finish() }
 
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearHistory()
@@ -69,8 +69,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.closeButton.setOnClickListener {
             binding.editText.setText(SEARCH_TEXT_DEF)
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
+            val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
             viewModel.updateTrackList()
         }
 
@@ -109,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.editText.addTextChangedListener(simpleTextWatcher)
 
-        viewModel.getSearchStateLiveData().observe(this) {searchState ->
+        viewModel.getSearchStateLiveData().observe(viewLifecycleOwner) {searchState ->
             when(searchState) {
                 is SearchState.Loading -> {
                     binding.foundNothingPlaceholder.isVisible = false
@@ -156,13 +156,14 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun clickHandler(track: Track) {
         if (clickDebounce()) {
-            val intent = Intent(this, PlayerActivity::class.java)
+            val intent = Intent(requireContext(), PlayerActivity::class.java)
             intent.putExtra(TRACK, gson.toJson(track))
-            this@SearchActivity.startActivity(intent)
+            this.startActivity(intent)
             viewModel.saveTrack(track)
             searchHistoryAdapter.trackList = viewModel.getTrackList()
             searchHistoryAdapter.notifyDataSetChanged()
@@ -183,23 +184,9 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, savedText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedText = savedInstanceState.getString(SEARCH_TEXT, SEARCH_TEXT_DEF)
-        binding.editText.setText(savedText)
-    }
-
-
     companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
         const val SEARCH_TEXT_DEF =""
         const val SEARCH_DEBOUNCE_DELAY = 2000L
         const val CLICK_DEBOUNCE_DELAY = 1000L
     }
-
 }
