@@ -84,7 +84,7 @@ class PlayerViewModel(
     }
 
     companion object {
-        private const val PROGRESS_DELAY = 500L
+        private const val PROGRESS_DELAY = 300L
     }
 
 }
