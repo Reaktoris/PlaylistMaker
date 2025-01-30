@@ -1,20 +1,24 @@
 package com.practicum.playlistmaker.player.ui.view_model
 
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.MediaPlayerManagerInteractor
 import com.practicum.playlistmaker.player.ui.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(
-    private val mediaPlayerManagerInteractor: MediaPlayerManagerInteractor,
-    private val handler: Handler
+    private val mediaPlayerManagerInteractor: MediaPlayerManagerInteractor
     ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
+
+    private var timerJob: Job? = null
 
     fun getPlayerStateLiveData(): LiveData<PlayerState> {
         return playerStateLiveData
@@ -29,22 +33,21 @@ class PlayerViewModel(
     }
 
     private fun updateProgress() {
-        handler.post(
-            object : Runnable{
-                override fun run() {
-                    when(playerStateLiveData.value) {
-                        is PlayerState.Playing -> {
-                            playerStateLiveData.value = PlayerState.Playing(getProgress())
-                            handler.postDelayed(this, PROGRESS_DELAY)
-                        }
-                        is PlayerState.Paused, is PlayerState.Prepared -> {
-                            handler.removeCallbacks(this)
-                        }
-                        else -> {}
-                    }
+        when(playerStateLiveData.value) {
+            is PlayerState.Playing -> {
+                timerJob = viewModelScope.launch {
+                    playerStateLiveData.value = PlayerState.Playing(getProgress())
+                    delay(PROGRESS_DELAY)
+                    updateProgress()
                 }
             }
-        )
+            is PlayerState.Paused, is PlayerState.Prepared -> {
+                timerJob?.cancel()
+            }
+            else -> {}
+
+
+        }
     }
 
     fun playbackControl() {

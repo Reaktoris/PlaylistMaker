@@ -3,8 +3,6 @@ package com.practicum.playlistmaker.search.ui.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
@@ -14,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
@@ -23,20 +22,20 @@ import com.practicum.playlistmaker.search.ui.SearchState
 import com.practicum.playlistmaker.search.ui.TRACK
 import com.practicum.playlistmaker.search.ui.TracksAdapter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
-    private val handler = Handler(Looper.getMainLooper())
-    private lateinit var searchRunnable: Runnable
     private lateinit var gson: Gson
     private val tracksAdapter: TracksAdapter by lazy {TracksAdapter{clickHandler(it)}}
     private val searchHistoryAdapter: TracksAdapter by lazy {TracksAdapter{clickHandler(it)}}
 
     private var isClickAllowed = true
-    private var savedText = SEARCH_TEXT_DEF
+    private var searchText = SEARCH_TEXT_DEF
     private val trackList = mutableListOf<Track>()
 
     override fun onCreateView(
@@ -49,8 +48,6 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        searchRunnable = Runnable{viewModel.searchTracks(savedText)}
 
         gson = Gson()
 
@@ -75,7 +72,7 @@ class SearchFragment : Fragment() {
         }
 
         binding.refreshButton.setOnClickListener {
-            viewModel.searchTracks(savedText)
+            viewModel.searchTracks(searchText)
         }
 
         binding.editText.setOnFocusChangeListener { _, hasFocus ->
@@ -86,7 +83,7 @@ class SearchFragment : Fragment() {
 
         binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.searchTracks(savedText)
+                viewModel.searchTracks(searchText)
             }
             false
         }
@@ -95,13 +92,12 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                savedText = s.toString()
+                searchText = s.toString()
                 binding.closeButton.isVisible = !s.isNullOrEmpty()
-                searchDebounce()
-                if (savedText.isEmpty()) {
+                viewModel.searchDebounce(searchText)
+                /*if (searchText.isEmpty()) {
                     viewModel.updateTrackList()
-                    handler.removeCallbacks(searchRunnable)
-                }
+                }*/
             }
             override fun afterTextChanged(s: Editable?) {
             }
@@ -174,19 +170,16 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
     companion object {
         const val SEARCH_TEXT_DEF =""
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
         const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
