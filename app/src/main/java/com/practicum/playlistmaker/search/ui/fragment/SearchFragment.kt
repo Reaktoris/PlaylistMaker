@@ -95,9 +95,6 @@ class SearchFragment : Fragment() {
                 searchText = s.toString()
                 binding.closeButton.isVisible = !s.isNullOrEmpty()
                 viewModel.searchDebounce(searchText)
-                /*if (searchText.isEmpty()) {
-                    viewModel.updateTrackList()
-                }*/
             }
             override fun afterTextChanged(s: Editable?) {
             }

@@ -4,7 +4,9 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import androidx.room.Room
 import com.google.gson.Gson
+import com.practicum.playlistmaker.media.data.db.AppDatabase
 import com.practicum.playlistmaker.search.data.impl.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesSearchApiService
 import com.practicum.playlistmaker.search.data.network.NetworkClient
@@ -41,5 +43,9 @@ val dataModule = module {
 
     factory {
         MediaPlayer()
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
     }
 }
