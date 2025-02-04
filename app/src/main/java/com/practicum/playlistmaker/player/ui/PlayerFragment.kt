@@ -136,13 +136,13 @@ class PlayerFragment : Fragment() {
                     playlists.addAll(state.playlists)
                     playListAdapter?.updatePlaylists(state.playlists)
                     playListAdapter?.notifyDataSetChanged()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 } else -> {}
             }
         }
 
         viewModel.getIsTrackAlreadyAddedLiveData().observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(),it, Toast.LENGTH_SHORT).show()
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         playListAdapter?.onItemClick = {
