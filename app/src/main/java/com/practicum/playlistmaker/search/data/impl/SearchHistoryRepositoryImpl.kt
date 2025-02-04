@@ -1,10 +1,13 @@
 package com.practicum.playlistmaker.search.data.impl
 
+import com.practicum.playlistmaker.media.data.db.AppDatabase
 import com.practicum.playlistmaker.search.data.dto.TrackDto
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.domain.SearchHistoryRepository
 
-class SearchHistoryRepositoryImpl(private val searchHistory: SearchHistory) :
+class SearchHistoryRepositoryImpl(
+    private val searchHistory: SearchHistory,
+    private val appDatabase: AppDatabase) :
     SearchHistoryRepository {
     override fun saveTrack(track: Track) {
         searchHistory.saveTrack(
@@ -22,7 +25,7 @@ class SearchHistoryRepositoryImpl(private val searchHistory: SearchHistory) :
         )
     }
 
-    override fun getTrackList(): MutableList<Track>{
+    override suspend fun getTrackList(): MutableList<Track>{
         val trackList = searchHistory.getTrackList()
         return (trackList.map { Track(
             it.trackName,
@@ -34,7 +37,8 @@ class SearchHistoryRepositoryImpl(private val searchHistory: SearchHistory) :
             it.collectionName,
             it.releaseDate,
             it.primaryGenreName,
-            it.country
+            it.country,
+            isFavorite = appDatabase.getTrackDao().getTracksID().contains(it.trackId)
         ) } as MutableList<Track>)
     }
 

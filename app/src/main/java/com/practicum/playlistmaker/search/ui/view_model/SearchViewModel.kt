@@ -12,6 +12,7 @@ import com.practicum.playlistmaker.search.ui.SearchState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class SearchViewModel(
     private val trackInteractor: TrackInteractor,
@@ -33,11 +34,15 @@ class SearchViewModel(
     }
 
     fun getTrackList() : MutableList<Track> {
-        return searchHistoryInteractor.getTrackList()
+        val trackList = mutableListOf<Track>()
+        runBlocking {
+            trackList.addAll(searchHistoryInteractor.getTrackList())
+        }
+        return trackList
     }
 
     fun updateTrackList() {
-        searchStateLiveData.value = SearchState.HistoryContent(searchHistoryInteractor.getTrackList())
+        searchStateLiveData.value = SearchState.HistoryContent(getTrackList())
     }
 
     fun clearHistory() {

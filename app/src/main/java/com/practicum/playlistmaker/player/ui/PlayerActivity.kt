@@ -58,6 +58,10 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
+        binding.likeButton.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
+
         viewModel.getPlayerStateLiveData().observe(this) {playerState ->
             when(playerState) {
                 is PlayerState.Prepared -> {
@@ -75,11 +79,22 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.getIsFavoriteLiveData().observe(this) {
+            if (it) {
+                binding.likeButton.setBackgroundResource(R.drawable.like_icon_1)
+                track.isFavorite = true
+            } else {
+                binding.likeButton.setBackgroundResource(R.drawable.like_icon)
+                track.isFavorite = false
+            }
+        }
+
         preparePlayer()
     }
 
     private fun preparePlayer() {
         viewModel.preparePlayer(track.previewUrl)
+        viewModel.isFavoriteCheck(track)
         binding.playButton.isEnabled = true
     }
 
