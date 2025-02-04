@@ -4,14 +4,20 @@
     <dimen name="primary_text_size">22sp</dimen>
     <dimen name="secondary_text_size">16sp</dimen>
     <dimen name="third_text_size">14sp</dimen>
+    <dimen name="fourth_text_size">12sp</dimen>
     <dimen name="primary_corner_radius">16dp</dimen>
+    <dimen name="secondary_corner_radius">8dp</dimen>
     <dimen name="primary_margin">16dp</dimen>
     <dimen name="secondary_margin">24dp</dimen>
     <dimen name="third_margin">17dp</dimen>
+    <dimen name="fourth_margin">32dp</dimen>
+    <dimen name="fifth_margin">4dp</dimen>
     <dimen name="primary_padding">16dp</dimen>
     <dimen name="secondary_padding">14dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="frame_height">61dp</dimen>
     <dimen name="button_radius">54dp</dimen>
+    <dimen name="dash">25dp</dimen>
+    <dimen name="stroke_width">1dp</dimen>
 
 </resources>

@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.search.ui.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,13 +12,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.domain.model.Track
 import com.practicum.playlistmaker.search.ui.SearchState
-import com.practicum.playlistmaker.search.ui.TRACK
 import com.practicum.playlistmaker.search.ui.TracksAdapter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import kotlinx.coroutines.delay
@@ -48,7 +46,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        isClickAllowed = true
         gson = Gson()
 
         tracksAdapter.trackList = trackList
@@ -95,6 +93,9 @@ class SearchFragment : Fragment() {
                 searchText = s.toString()
                 binding.closeButton.isVisible = !s.isNullOrEmpty()
                 viewModel.searchDebounce(searchText)
+                if (searchText.isEmpty()) {
+                    viewModel.updateTrackList()
+                }
             }
             override fun afterTextChanged(s: Editable?) {
             }
@@ -154,9 +155,7 @@ class SearchFragment : Fragment() {
 
     private fun clickHandler(track: Track) {
         if (clickDebounce()) {
-            val intent = Intent(requireContext(), PlayerActivity::class.java)
-            intent.putExtra(TRACK, gson.toJson(track))
-            this.startActivity(intent)
+            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToPlayerFragment(gson.toJson(track)))
             viewModel.saveTrack(track)
             searchHistoryAdapter.trackList = viewModel.getTrackList()
             searchHistoryAdapter.notifyDataSetChanged()

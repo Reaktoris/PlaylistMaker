@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.app
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.markodevcic.peko.PermissionRequester
 import com.practicum.playlistmaker.di.dataModule
 import com.practicum.playlistmaker.di.interactorModule
 import com.practicum.playlistmaker.di.repositoryModule
@@ -13,6 +14,7 @@ import org.koin.core.context.GlobalContext.startKoin
 const val PREFERENCES = "playlist_maker_preferences"
 const val NIGHT_MODE_KEY = "night_mode_key"
 const val SEARCHED_TRACKS_KEY = "searched_tracks"
+const val FILE_NAME_KEY = "file_name"
 
 class App: Application() {
 
@@ -25,6 +27,8 @@ class App: Application() {
             androidContext(this@App)
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
+
+        PermissionRequester.initialize(applicationContext)
 
         sharedPref = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
         darkTheme = sharedPref.getBoolean(

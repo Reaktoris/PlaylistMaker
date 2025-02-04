@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.media.domain.FavoritesInteractor
+import com.practicum.playlistmaker.media.domain.PlaylistsInteractor
+import com.practicum.playlistmaker.media.domain.model.Playlist
+import com.practicum.playlistmaker.media.ui.playlists.PlaylistsState
 import com.practicum.playlistmaker.player.domain.MediaPlayerManagerInteractor
 import com.practicum.playlistmaker.player.ui.PlayerState
 import com.practicum.playlistmaker.search.domain.model.Track
@@ -16,11 +19,14 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val mediaPlayerManagerInteractor: MediaPlayerManagerInteractor,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val playlistsInteractor: PlaylistsInteractor
     ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
     private val isFavoriteLiveData = MutableLiveData<Boolean>()
+    private val isTrackAlreadyAddedLiveData = MutableLiveData<String>()
+    private val playlistsStateLiveData = MutableLiveData<PlaylistsState>()
 
     private var timerJob: Job? = null
 
@@ -28,8 +34,16 @@ class PlayerViewModel(
         return playerStateLiveData
     }
 
+    fun getPlaylistsStateLiveData(): LiveData<PlaylistsState> {
+        return playlistsStateLiveData
+    }
+
     fun getIsFavoriteLiveData(): LiveData<Boolean> {
         return isFavoriteLiveData
+    }
+
+    fun getIsTrackAlreadyAddedLiveData(): LiveData<String> {
+        return isTrackAlreadyAddedLiveData
     }
 
     fun preparePlayer(url: String) {
@@ -108,8 +122,34 @@ class PlayerViewModel(
         }
     }
 
+    fun getPlaylists() {
+        viewModelScope.launch {
+            playlistsInteractor.getPlaylists().collect() { data ->
+                playlistsStateLiveData.value = if (data.isNotEmpty()) {
+                    PlaylistsState.Content(data)
+                } else {
+                    PlaylistsState.Empty
+                }
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+            if (playlist.tracks.contains(track.trackId.toString())) {
+                    isTrackAlreadyAddedLiveData.value = "Трек уже добавлен в плейлист ${playlist.title}"
+            } else {
+                viewModelScope.launch {
+                    playlistsInteractor.addTrackToPlaylist(playlist, track)
+                    isTrackAlreadyAddedLiveData.value = "Добавлено в плейлист ${playlist.title}"
+                    getPlaylists()
+                }
+            }
+
+    }
+
     companion object {
         private const val PROGRESS_DELAY = 300L
     }
 
 }
+

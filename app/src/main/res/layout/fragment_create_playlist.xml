@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/colorPrimaryVariant"
+    tools:context=".media.ui.playlists.CreatePlaylistFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Toolbar"
+        app:navigationIcon="@drawable/back_icon"
+        app:title="@string/new_playlist"/>
+
+    <FrameLayout
+        android:id="@+id/cover_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/secondary_margin"
+        android:layout_marginHorizontal="@dimen/secondary_margin">
+
+        <ImageView
+            android:id="@+id/placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/dash_frame"
+            android:src="@drawable/add_cover_icon"
+            android:padding="105dp" />
+
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            />
+
+    </FrameLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/title_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cover_layout"
+        android:layout_marginTop="@dimen/fourth_margin"
+        android:layout_marginHorizontal="@dimen/secondary_margin"
+        android:hint="@string/title"
+        app:boxStrokeColor="@color/edit_text_selector"
+        app:hintTextColor="@color/blue">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_layout"
+        android:layout_marginTop="@dimen/primary_margin"
+        android:layout_marginHorizontal="@dimen/secondary_margin"
+        android:hint="@string/description"
+        app:boxStrokeColor="@color/edit_text_selector"
+        app:hintTextColor="@color/blue">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/create_button"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/fourth_margin"
+        android:layout_marginHorizontal="@dimen/secondary_margin"
+        android:backgroundTint="@color/button_selector"
+        android:fontFamily="@font/ys_display_medium"
+        android:textFontWeight="500"
+        android:text="@string/create"
+        android:textColor="@color/white"
+        android:textSize="@dimen/secondary_text_size"
+        app:cornerRadius="@dimen/secondary_corner_radius"
+        android:enabled="false"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
