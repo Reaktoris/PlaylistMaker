@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_mediaFragment_to_playerFragment2"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_playlistPageFragment"
+            app:destination="@id/playlistPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -32,7 +35,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/createPlaylistFragment"
-        android:name="com.practicum.playlistmaker.media.ui.playlists.CreatePlaylistFragment"
+        android:name="com.practicum.playlistmaker.media.ui.playlists.create_playlist.CreatePlaylistFragment"
         android:label="fragment_create_playlist"
         tools:layout="@layout/fragment_create_playlist" />
     <fragment
@@ -57,4 +60,27 @@
         android:name="com.practicum.playlistmaker.media.ui.playlists.PlaylistsFragment"
         android:label="fragment_playlists"
         tools:layout="@layout/fragment_playlists" />
+    <fragment
+        android:id="@+id/playlistPageFragment"
+        android:name="com.practicum.playlistmaker.media.ui.playlists.playlist_page.PlaylistPageFragment"
+        android:label="fragment_playlist_page"
+        tools:layout="@layout/fragment_playlist_page" >
+        <argument
+            android:name="playlistId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_playlistPageFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistPageFragment_to_editPlaylistFragment"
+            app:destination="@id/editPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.practicum.playlistmaker.media.ui.playlists.edit_playlist.EditPlaylistFragment"
+        android:label="EditPlaylistFragment" >
+        <argument
+            android:name="playlist"
+            app:argType="string" />
+    </fragment>
 </navigation>
