@@ -5,16 +5,32 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/colorPrimaryVariant"
-    tools:context=".media.ui.fragment.PlaylistsFragment">
-
-    <Button android:id="@+id/new_playlist_button"
-        style="@style/Button"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="12dp"
-        android:text="@string/create_playlist"
-        />
+    tools:context=".media.ui.playlists.PlaylistsFragment">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button android:id="@+id/new_playlist_button"
+            style="@style/Button"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp"
+            android:text="@string/create_playlist"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/primary_margin"
+            android:layout_marginHorizontal="12dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/placeholder"
         style="@style/SearchActivityPlaceholderLayout"
         android:layout_marginTop="106dp"
         android:visibility="visible">
