@@ -82,6 +82,7 @@ class PlaylistPageFragment : Fragment() {
         viewModel.getTrackListStateLiveData().observe(viewLifecycleOwner) {
             when(it) {
                 is TrackListState.Content -> {
+                    binding.placeholderBottom.isVisible = false
                     isTracksExist = true
                     binding.timeAndCount.isVisible = true
                     playlistPageBottomSheetAdapter.trackList = it.tracks.toMutableList()
@@ -97,6 +98,7 @@ class PlaylistPageFragment : Fragment() {
 
                 }
                 else -> {
+                    binding.placeholderBottom.isVisible = true
                     playlistPageBottomSheetAdapter.trackList.clear()
                     playlistPageBottomSheetAdapter.notifyDataSetChanged()
                     isTracksExist = false
@@ -167,6 +169,9 @@ class PlaylistPageFragment : Fragment() {
             viewModel.sharePlaylist()
         } else {
             Toast.makeText(requireContext(), R.string.no_tracks, Toast.LENGTH_SHORT).show()
+            BottomSheetBehavior.from(binding.moreBottomSheet).apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
         }
     }
 
@@ -182,9 +187,9 @@ class PlaylistPageFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_track)
             .setMessage(R.string.delete_track_description)
-            .setNegativeButton(R.string.cancel){ dialog, _ ->
+            .setNegativeButton(R.string.no){ dialog, _ ->
                 dialog.dismiss()
-            }.setPositiveButton(R.string.delete){_, _, ->
+            }.setPositiveButton(R.string.yes){_, _, ->
                 viewModel.removeTrack(track)
             }.show()
     }

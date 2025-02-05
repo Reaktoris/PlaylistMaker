@@ -66,7 +66,7 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
         val allTracks = convertFromTrackEntities(appDatabase.getPlaylistTrackDao().getTracks())
         val filteredTracks = allTracks.filter { it.trackId in tracks }
         emit(filteredTracks)
-    }
+    }.map {it.reversed()}
 
     private fun convertFromPlaylistEntities(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map {

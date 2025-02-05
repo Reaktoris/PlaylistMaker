@@ -151,6 +151,17 @@
             android:background="@drawable/rectangle_shape"
             android:layout_marginTop="@dimen/icon_padding"/>
 
+
+            <TextView
+                android:id="@+id/placeholder_bottom"
+                style="@style/SearchActivityPlaceholderText"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:text="@string/empty_playlists"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/fourth_margin"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
