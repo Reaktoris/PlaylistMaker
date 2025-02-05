@@ -3,9 +3,9 @@ package com.practicum.playlistmaker.media.domain.model
 
 data class Playlist(
     val id: Int?,
-    val title: String,
-    val description: String?,
-    val fileUri: String?,
-    val tracks: List<String>,
-    val count: Int
+    var title: String,
+    var description: String?,
+    var fileUri: String?,
+    val tracks: MutableList<Int>,
+    var count: Int
 )

@@ -33,7 +33,7 @@ class App: Application() {
         sharedPref = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
         darkTheme = sharedPref.getBoolean(
             NIGHT_MODE_KEY,
-            true
+            false
         )
 
 

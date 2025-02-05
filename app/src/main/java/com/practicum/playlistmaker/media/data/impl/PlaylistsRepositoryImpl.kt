@@ -22,13 +22,51 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
     }.map{it.reversed()}
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
-        val updatedPlaylist = playlist.copy(
-            tracks = playlist.tracks.plus(track.trackId.toString()),
-            count = playlist.count.plus(1)
-        )
-        appDatabase.getPlaylistDao().updatePlaylist(convertFromPlaylist(updatedPlaylist))
+        playlist.tracks.add(track.trackId)
+        playlist.count++
+        appDatabase.getPlaylistDao().updatePlaylist(convertFromPlaylist(playlist))
         appDatabase.getPlaylistTrackDao().insertPlaylistTrack(convertFromTrack(track))
     }
+
+    override suspend fun getPlaylistById(id: Int): Playlist {
+        return convertFromPlaylistEntitie(appDatabase.getPlaylistDao().getPlaylistById(id))
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        val trackList = playlist.tracks
+        if (playlist.id != null) {
+            appDatabase.getPlaylistDao().deletePlaylistById(playlist.id)
+            trackList.forEach { trackId -> removePlaylistTrack(trackId) }
+        }
+    }
+
+    override suspend fun removeTrackFromPlaylist(playlist: Playlist, track: Track) {
+        playlist.tracks.remove(track.trackId)
+        playlist.count--
+        appDatabase.getPlaylistDao().updatePlaylist(convertFromPlaylist(playlist))
+        removePlaylistTrack(track.trackId)
+    }
+
+    override suspend fun removePlaylistTrack(trackId: Int) {
+        getPlaylists().collect { playlists ->
+            val isTrackExist = playlists.any { playlist ->
+                playlist.tracks.any { track -> track == trackId }
+            }
+            if (!isTrackExist) {
+                appDatabase.getPlaylistTrackDao().deletePlaylistTrack(trackId)
+            }
+        }
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        appDatabase.getPlaylistDao().updatePlaylist(convertFromPlaylist(playlist))
+    }
+
+    override fun getTracksFromPlaylist(tracks: List<Int>): Flow<List<Track>> = flow {
+        val allTracks = convertFromTrackEntities(appDatabase.getPlaylistTrackDao().getTracks())
+        val filteredTracks = allTracks.filter { it.trackId in tracks }
+        emit(filteredTracks)
+    }.map {it.reversed()}
 
     private fun convertFromPlaylistEntities(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map {
@@ -37,9 +75,24 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
                 it.title,
                 it.description,
                 it.fileUri,
-                Gson().fromJson(it.tracks, object : TypeToken<MutableList<String>>() {}.type),
+                Gson().fromJson(it.tracks, object : TypeToken<MutableList<Int>>() {}.type),
                 it.count
             )
+        }
+    }
+    private fun convertFromTrackEntities(tracks: List<PlaylistTrackEntity>): List<Track> {
+        return tracks.map { trackEntity ->
+            Track(
+                trackEntity.trackName,
+                trackEntity.artistName,
+                trackEntity.trackTimeMillis,
+                trackEntity.artworkUrl100,
+                trackEntity.previewUrl,
+                trackEntity.trackId,
+                trackEntity.collectionName,
+                trackEntity.releaseDate,
+                trackEntity.primaryGenreName,
+                trackEntity.country)
         }
     }
 
@@ -50,6 +103,17 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
             playlist.description,
             playlist.fileUri,
             Gson().toJson(playlist.tracks),
+            playlist.count
+        )
+    }
+
+    private fun convertFromPlaylistEntitie(playlist: PlaylistEntity): Playlist {
+        return Playlist(
+            playlist.id,
+            playlist.title,
+            playlist.description,
+            playlist.fileUri,
+            Gson().fromJson(playlist.tracks, object : TypeToken<MutableList<Int>>() {}.type),
             playlist.count
         )
     }

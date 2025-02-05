@@ -135,15 +135,15 @@ class PlayerViewModel(
     }
 
     fun addTrackToPlaylist(playlist: Playlist, track: Track) {
-            if (playlist.tracks.contains(track.trackId.toString())) {
-                    isTrackAlreadyAddedLiveData.value = "Трек уже добавлен в плейлист ${playlist.title}"
-            } else {
-                viewModelScope.launch {
-                    playlistsInteractor.addTrackToPlaylist(playlist, track)
-                    isTrackAlreadyAddedLiveData.value = "Добавлено в плейлист ${playlist.title}"
-                    getPlaylists()
-                }
+        if (track.trackId in playlist.tracks) {
+            isTrackAlreadyAddedLiveData.value = "Трек уже добавлен в плейлист ${playlist.title}"
+        } else {
+            viewModelScope.launch {
+                playlistsInteractor.addTrackToPlaylist(playlist, track)
+                isTrackAlreadyAddedLiveData.value = "Добавлено в плейлист ${playlist.title}"
             }
+            getPlaylists()
+        }
 
     }
 

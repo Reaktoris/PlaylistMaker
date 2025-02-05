@@ -11,5 +11,5 @@ data class PlaylistEntity(
     val description: String?,
     val fileUri: String?,
     val tracks: String,
-    val count: Int
+    var count: Int
 )

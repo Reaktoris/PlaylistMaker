@@ -6,4 +6,6 @@ interface ExternalNavigator {
     fun openLink()
 
     fun openEmail()
+
+    fun shareText(text: String)
 }

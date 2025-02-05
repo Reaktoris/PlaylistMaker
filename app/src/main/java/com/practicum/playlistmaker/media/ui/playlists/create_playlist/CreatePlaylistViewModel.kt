@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.media.ui.playlists.view_model
+package com.practicum.playlistmaker.media.ui.playlists.create_playlist
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -8,9 +8,10 @@ import com.practicum.playlistmaker.media.domain.StorageInteractor
 import com.practicum.playlistmaker.media.domain.model.Playlist
 import kotlinx.coroutines.launch
 
-class CreatePlaylistViewModel(
+open class CreatePlaylistViewModel(
     private val storageInteractor: StorageInteractor,
-    private val playlistsInteractor: PlaylistsInteractor) : ViewModel() {
+    private val playlistsInteractor: PlaylistsInteractor
+) : ViewModel() {
     fun saveImage(uri: Uri): String {
         return storageInteractor.saveImage(uri)
     }
