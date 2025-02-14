@@ -10,13 +10,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.practicum.playlistmaker.media.domain.model.Playlist
+import com.practicum.playlistmaker.media.ui.fragment.MediaFragmentDirections
 import com.practicum.playlistmaker.media.ui.playlists.view_model.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
     private lateinit var binding: FragmentPlaylistsBinding
     private val viewModel by viewModel<PlaylistsViewModel>()
-    private val playlistsAdapter = PlaylistsAdapter()
+    private val playlistsAdapter: PlaylistsAdapter by lazy { PlaylistsAdapter{clickHandler(it)} }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +59,12 @@ class PlaylistsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.getPlaylists()
+    }
+
+    private fun clickHandler(playlist: Playlist) {
+        findNavController().navigate(MediaFragmentDirections.actionMediaFragmentToPlaylistPageFragment(
+            playlist.id!!
+        ))
     }
 
     companion object {

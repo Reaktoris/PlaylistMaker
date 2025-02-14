@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimaryVariant"
-    tools:context=".media.ui.playlists.CreatePlaylistFragment">
+    tools:context=".media.ui.playlists.create_playlist.CreatePlaylistFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

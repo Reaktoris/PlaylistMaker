@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.media.ui.playlists
+package com.practicum.playlistmaker.media.ui.playlists.create_playlist
 
 import android.content.Intent
 import android.net.Uri
@@ -24,15 +24,14 @@ import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentCreatePlaylistBinding
-import com.practicum.playlistmaker.media.ui.playlists.view_model.CreatePlaylistViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreatePlaylistFragment : Fragment() {
-    private lateinit var binding: FragmentCreatePlaylistBinding
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
+open class CreatePlaylistFragment : Fragment() {
+    lateinit var binding: FragmentCreatePlaylistBinding
+    open val viewModel by viewModel<CreatePlaylistViewModel>()
     private val requester = PermissionRequester.instance()
-    private var fileUri: Uri? = null
+    var fileUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -110,7 +109,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun closeNav() {
+    open fun closeNav() {
         if (!binding.title.text.isNullOrEmpty() ||
             !binding.description.text.isNullOrEmpty() ||
             fileUri != null) {
